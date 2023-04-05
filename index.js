@@ -24,6 +24,12 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
+app.get('/api', function (req, res) {
+  // timestamp is empty
+  let date = new Date();
+  res.json({ 'unix': date.getTime(), 'utc': date.toUTCString() });
+})
+
 app.get('/api/:timestamp', function (req, res) {
   let timestamp = req.params.timestamp;
 
@@ -32,9 +38,12 @@ app.get('/api/:timestamp', function (req, res) {
   }
 
   let date = new Date(timestamp);
-  let utc = date.toUTCString();
 
-  res.json({ 'unix': Date.parse(utc), 'utc': utc });
+  if (date.toString() === 'Invalid Date') {
+    res.json({'error': 'Invalid Date'});
+  }
+
+  res.json({ 'unix': date.getTime(), 'utc': date.toUTCString() });
 });
 
 
